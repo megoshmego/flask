@@ -1,9 +1,9 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, flash
 from random import choice, randint, sample
 from flask_debugtoolbar import DebugToolbarExtension
 
 
-COMPLIMENTS = ["COOL", "CLEVER", "TENACIOUS", "PYTHONIC", "AWESOME"]
+COMPLIMENTS = {"COOL", "CLEVER", "TENACIOUS", "PYTHONIC", "AWESOME"}
 
 
 app = Flask(__name__)
@@ -13,6 +13,7 @@ debug = DebugToolbarExtension(app)
 
 @app.route('/')
 def home():
+    flash('you are great!!')
     return "Helloo there!"
 if __name__ == '__main__':
     app.run(debug=True)
@@ -29,21 +30,27 @@ def get_greeting():   #make sure to put this in the route you want to send this 
     
 @app.route('/jinja')
 def say_jinja():
+    flash('You are wonderful!!')
     return render_template("jinja.html")
 
 
 
 @app.route('/form2')
 def show_form_2():
+    flash('I like your face!!')
     return render_template("form2.html") 
 
 
 
 @app.route('/greet2') #looping example
 def get_greeting_2():
+    flash('Nana is the best cat!!')
     username = request.args["username"]
     wants = request.args.get("wants_compliments")
     nice_things = sample(COMPLIMENTS, 3) if wants else []
+    if wants:
+        flash('you like compliments')
+    else: flash('you are boring')
     return render_template("greet2.html", username=username, wants_compliments=wants, compliments=nice_things)
 
 @app.route('/lucky') #render_template ex., with random number
@@ -53,6 +60,7 @@ def lucky_number():
 
 @app.route('/spell/<word>')  #for loop
 def spell_word(word):
+    flash('that's right, another flash')
     caps_word = word.upper()
     return render_template("spellword.html", word=caps_word)
 
